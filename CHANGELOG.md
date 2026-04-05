@@ -14,6 +14,16 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.2.1] — 2026-04-06
+
+### Fixed
+- **GitHub Actions**：`ruff check` 改为读取 `pyproject.toml` 中的 lint 配置（恢复 E701 等忽略项）；暂时移除 `ruff format --check`（与当前代码风格尚未统一）
+- **测试**：`mentor import` 集成测试在窄终端下因 Rich 路径换行导致断言失败，改为对输出去换行后再匹配 Persona ID
+- **CLI**：导入成功提示将路径单独一行，减少终端折行
+- **发布工作流**：构建产物通过 artifact 传递到 Release job，GitHub Release 可正确附带 sdist/wheel
+
+---
+
 ## [0.2.0] — 2026-04-06
 
 ### Added
