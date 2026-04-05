@@ -1240,7 +1240,8 @@ def import_persona(
                     (target_dir / filename).write_bytes(data)
                     imported.append(filename)
 
-            console.print(f"[bold green]✅ 已导入 Persona [{persona_id}][/bold green]  →  {target_dir}")
+            console.print(f"[bold green]✅ 已导入 Persona [{persona_id}][/bold green]")
+            console.print(f"  [dim]路径[/dim] [cyan]{target_dir}[/cyan]")
             console.print(f"[dim]文件：{', '.join(imported)}[/dim]")
 
     console.print("\n[dim]运行 mentor list 查看所有已导入的 Persona[/dim]")

@@ -47,6 +47,12 @@ jobs:
       - name: Build package
         run: python -m build
 
+      - name: Upload sdist and wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         # OIDC 模式不需要 password，需在 PyPI 项目设置中配置 Trusted Publisher
@@ -62,6 +68,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Download built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
 
       - name: Extract changelog for this version
         id: changelog

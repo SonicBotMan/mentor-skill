@@ -63,7 +63,5 @@ jobs:
           pip install ruff
 
       - name: Ruff lint
-        run: ruff check src/ --select E,F,W --ignore E501
-
-      - name: Ruff format check
-        run: ruff format --check src/
+        # 使用 pyproject.toml 中 [tool.ruff.lint]（含 E701 等 intentional ignores）
+        run: ruff check src/

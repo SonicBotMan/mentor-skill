@@ -211,7 +211,8 @@ class TestExportImport:
 
         assert result.exit_code == 0
         assert (tmp_path / ".mentor" / "personas" / "roundtrip" / "persona.json").exists()
-        assert "roundtrip" in result.output
+        # Rich 在窄终端会对长路径软换行，子串 "roundtrip" 可能被拆成 ro\nundtrip
+        assert "roundtrip" in result.output.replace("\n", "")
 
     def test_import_missing_file_exits_1(self, tmp_path):
         with _patch_config(tmp_path):
