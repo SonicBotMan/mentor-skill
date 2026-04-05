@@ -14,6 +14,13 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.2.3] — 2026-04-06
+
+### Changed
+- **PyPI 发布**：支持仓库 Secret **`PYPI_API_TOKEN`**；设置后优先用 API Token 上传，无需在 PyPI 配置 Trusted Publisher。未设置时仍走 OIDC（须在 PyPI 项目 *Publishing* 中添加 GitHub Trusted Publisher：`SonicBotMan`、`mentor-skill`、workflow **`publish.yml`**，参见 [Adding a trusted publisher](https://docs.pypi.org/trusted-publishers/adding-a-publisher/)）
+
+---
+
 ## [0.2.2] — 2026-04-06
 
 ### Fixed

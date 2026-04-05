@@ -56,7 +56,12 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        # OIDC 模式不需要 password，需在 PyPI 项目设置中配置 Trusted Publisher
+        with:
+          # Secret 未设置时 password 为空 → 使用 OIDC，须在 PyPI 为本仓库添加 Trusted Publisher：
+          # Owner: SonicBotMan，Repository: mentor-skill，Workflow: publish.yml（仅文件名，见 PyPI 文档）
+          # https://docs.pypi.org/trusted-publishers/adding-a-publisher/
+          # 若暂不配置 OIDC：在 GitHub 仓库 Settings → Secrets → Actions 添加 PYPI_API_TOKEN（pypi.org → Account → API tokens）
+          password: ${{ secrets.PYPI_API_TOKEN }}
 
   create-release:
     name: Create GitHub Release
