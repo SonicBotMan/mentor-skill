@@ -1,0 +1,83 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*.*.*"   # 触发条件：推送 vX.Y.Z 格式的 tag
+
+jobs:
+  build-and-publish:
+    name: Build & Publish
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write   # 使用 OIDC 免密发布（推荐）
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install build tools
+        run: |
+          pip install build hatchling
+
+      - name: Run tests before publishing
+        run: |
+          pip install -e ".[dev]"
+          pytest tests/ -v --tb=short
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Verify version matches tag
+        run: |
+          PKG_VERSION=$(python -c "from mentor_skill import __version__; print(__version__)")
+          TAG_VERSION="${{ steps.version.outputs.VERSION }}"
+          if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
+            echo "❌ Version mismatch: package=$PKG_VERSION, tag=$TAG_VERSION"
+            exit 1
+          fi
+          echo "✅ Version matched: $PKG_VERSION"
+
+      - name: Build package
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # OIDC 模式不需要 password，需在 PyPI 项目设置中配置 Trusted Publisher
+
+  create-release:
+    name: Create GitHub Release
+    needs: build-and-publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          # 从 CHANGELOG.md 提取当前版本的更新内容
+          NOTES=$(awk "/^## \[$VERSION\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
+          echo "NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: mentor-skill ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.NOTES }}
+          files: dist/*
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'rc') || contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}

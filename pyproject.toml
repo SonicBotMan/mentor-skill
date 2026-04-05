@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mentor-skill"
+version = "0.2.0"
+description = "把你的导师蒸馏成 AI Skill — 她的思维方式、反馈风格、知识体系全部保留。"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "SonicBotMan" }]
+keywords = ["AI", "skill", "mentor", "persona", "distillation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Intended Audience :: Developers",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.12.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "litellm>=1.30.0",
+    "requests>=2.31.0",
+    "pdfplumber>=0.10.0",
+    "playwright>=1.40.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "ruff>=0.4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/SonicBotMan/mentor-skill"
+Repository = "https://github.com/SonicBotMan/mentor-skill"
+"Bug Tracker" = "https://github.com/SonicBotMan/mentor-skill/issues"
+Changelog = "https://github.com/SonicBotMan/mentor-skill/blob/main/CHANGELOG.md"
+
+[project.scripts]
+mentor = "mentor_skill.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mentor_skill"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = [
+    "E501",  # line-length handled by line-length setting
+    "E701",  # single-line guard clauses are acceptable in this codebase
+]

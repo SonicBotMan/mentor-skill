@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+dist/
+build/
+
+# Virtual env
+.venv/
+venv/
+.env
+.env.*
+
+# Tools / tests
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Local mentor data (user machine)
+.mentor/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp

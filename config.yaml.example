@@ -1,0 +1,137 @@
+# mentor-skill 配置文件示例
+#
+# 使用方式：
+#   1. 复制此文件为 config.yaml：  cp config.yaml.example config.yaml
+#   2. 填入你的配置值
+#   3. 也可通过 CLI 动态设置：  mentor config --set llm.api_key YOUR_KEY
+#
+# 配置文件搜索顺序：
+#   1. 命令行 --config 指定路径
+#   2. 当前目录 config.yaml / config.yml
+#   3. ~/.mentor-skill/config.yaml（全局配置）
+#
+# 最小化配置：只需填 llm.api_key 和 llm.model 即可运行蒸馏
+
+# ─────────────────────────────────────────────
+#  项目配置
+# ─────────────────────────────────────────────
+project:
+  # 默认导师名称（可在各命令的 --persona 参数中覆盖）
+  name: my-mentor
+
+  # 初始化模板类型：product（产品）/ tech（技术）/ academic（学术）
+  template: product
+
+  # 原始采集数据的存储目录（每个导师一个子目录）
+  data_dir: .mentor/data
+
+  # 生成的 Skill 文件输出目录
+  output_dir: .mentor/output
+
+  # Persona JSON 文件的存储目录
+  persona_dir: .mentor/personas
+
+
+# ─────────────────────────────────────────────
+#  LLM 配置（必填）
+# ─────────────────────────────────────────────
+llm:
+  # 模型名称，支持以下选项：
+  #   智谱 GLM：  glm-4-flash（免费）/ glm-4（付费）
+  #   DeepSeek：  deepseek-chat
+  #   Qwen：      qwen-turbo / qwen-plus / qwen-max
+  #   MiniMax：   abab6.5s-chat
+  #   OpenAI：    gpt-4o-mini / gpt-4o
+  #   Anthropic： claude-3-haiku-20240307 / claude-3-5-sonnet-20241022
+  #   Ollama：    ollama/llama3（本地部署）
+  model: glm-4-flash
+
+  # API Key（必填）
+  # 推荐使用环境变量而非明文写入：export MENTOR_LLM_API_KEY=xxx
+  api_key: ""
+
+  # API Base URL（可选，OpenAI 和 Anthropic 不需要填）
+  # 智谱 GLM：  https://open.bigmodel.cn/api/paas/v4/
+  # DeepSeek：  https://api.deepseek.com/v1
+  # Qwen：      https://dashscope.aliyuncs.com/compatible-mode/v1
+  # MiniMax：   https://api.minimax.chat/v1
+  # Ollama：    http://localhost:11434
+  api_base: "https://open.bigmodel.cn/api/paas/v4/"
+
+  # 生成温度（0.0-1.0）
+  # 蒸馏建议使用 0.3-0.5，较低温度保证输出稳定
+  temperature: 0.3
+
+  # 单次最大输出 token 数
+  # 蒸馏任务建议 4096 以上，对话测试可以低一些
+  max_tokens: 4096
+
+  # 请求超时（秒）
+  # 网络不佳时适当调高，建议不低于 60
+  timeout: 120
+
+
+# ─────────────────────────────────────────────
+#  飞书配置（可选，需要采集飞书数据时填写）
+# ─────────────────────────────────────────────
+feishu:
+  # 飞书开放平台 App ID
+  # 创建地址：https://open.feishu.cn/app → 企业自建应用
+  app_id: ""
+
+  # 飞书开放平台 App Secret
+  app_secret: ""
+
+  # User Access Token（可选，采集私聊消息时需要）
+  # 获取方式：飞书开放平台 → OAuth2.0 授权流程
+  user_access_token: ""
+
+  # 私聊 Chat ID（可选，指定要采集的私聊对话）
+  # 获取方式：mentor collect --source feishu --name "王老师" 时会输出
+  p2p_chat_id: ""
+
+
+# ─────────────────────────────────────────────
+#  钉钉配置（可选，需要采集钉钉数据时填写）
+# ─────────────────────────────────────────────
+dingtalk:
+  # 钉钉开放平台 App Key
+  # 创建地址：https://open.dingtalk.com/ → 应用管理
+  app_key: ""
+
+  # 钉钉开放平台 App Secret
+  app_secret: ""
+
+  # Chrome 用户数据目录（可选，用于复用本地登录 Session，避免每次扫码）
+  # macOS 默认：~/Library/Application Support/Google/Chrome/Default
+  # Windows：   C:\Users\用户名\AppData\Local\Google\Chrome\User Data\Default
+  # 设置后会直接复用已登录的 Chrome，无需重新扫码
+  chrome_profile: null
+
+
+# ─────────────────────────────────────────────
+#  采集行为配置（可选）
+# ─────────────────────────────────────────────
+collect:
+  # 最多采集消息条数（超出时截断最早的消息）
+  msg_limit: 1000
+
+  # 最多采集文档数量
+  doc_limit: 30
+
+
+# ─────────────────────────────────────────────
+#  数据分析配置（可选）
+# ─────────────────────────────────────────────
+analyze:
+  # 消息最短有效长度（低于此值视为无效消息，如"好"、"嗯"）
+  min_message_length: 10
+
+  # 高价值消息最短长度（用于质量评分，通常是包含分析和建议的长消息）
+  high_value_min_length: 50
+
+  # 对话提取的上下文窗口（提问前后各看 N 条消息）
+  context_window: 5
+
+  # 对话分割时间间隔（分钟），超过此间隔认为是新对话
+  gap_minutes: 30
