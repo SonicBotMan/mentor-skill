@@ -9,9 +9,10 @@ jobs:
   build-and-publish:
     name: Build & Publish
     runs-on: ubuntu-latest
-    environment: pypi
+    # 勿在此使用 environment: xxx，除非你在 PyPI Trusted Publisher 里填写了同名 GitHub Environment；
+    # 否则 OIDC sub 会带 :environment:xxx，与 PyPI 配置不一致 → invalid-publisher。
     permissions:
-      id-token: write   # 使用 OIDC 免密发布（推荐）
+      id-token: write   # OIDC → PyPI Trusted Publisher（见 https://docs.pypi.org/trusted-publishers/ ）
 
     steps:
       - uses: actions/checkout@v4
