@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mentor-skill"
-version = "0.2.1"
+version = "0.2.2"
 description = "把你的导师蒸馏成 AI Skill — 她的思维方式、反馈风格、知识体系全部保留。"
 readme = "README.md"
 license = { file = "LICENSE" }

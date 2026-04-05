@@ -14,6 +14,13 @@ versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.2.2] — 2026-04-06
+
+### Fixed
+- **PyPI 发布**：从 `publish.yml` 中移除 `environment: pypi`，使 GitHub OIDC 的 `sub` 与 PyPI「Trusted Publisher」常见配置（仓库 + workflow，无 Environment）一致，避免 `invalid-publisher`
+
+---
+
 ## [0.2.1] — 2026-04-06
 
 ### Fixed
